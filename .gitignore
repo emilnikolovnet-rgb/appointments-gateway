@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Appointments.Gateway/.vs
+/Appointments.Gateway/Appointments.Gateway.Api/bin/Debug/net10.0
+/Appointments.Gateway/Appointments.Gateway.Api/obj/Debug/net10.0
+/Appointments.Gateway/Appointments.Gateway.Api/obj
+/.gitignore
+/.gitignore
