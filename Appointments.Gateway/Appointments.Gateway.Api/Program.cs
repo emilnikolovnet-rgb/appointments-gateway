@@ -7,7 +7,6 @@ if (!builder.Environment.IsDevelopment())
     angularUr = "https://your-frontend.com";
 }
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("GatewayCors", policy =>
