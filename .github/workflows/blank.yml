@@ -3,7 +3,7 @@ name: Build, Push and Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main
+      - master
 
 permissions:
   id-token: write
