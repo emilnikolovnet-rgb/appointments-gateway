@@ -1,0 +1,64 @@
+name: Build, Push and Deploy to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ACR_NAME: "crappointments"
+  DOTNET_VERSION: "10.0"
+  RESOURCE_GROUP: "rg-appointments"
+  CONTAINER_APP_NAME: "ca-appointments-api" # Името на вашия Container App в Azure
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Сваляне на кода
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Инсталиране на .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # 3. Логване в Azure (Използва съществуващите OIDC тайни)
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 4. СЪЗДАВАНЕ НА DOCKER CONFIG
+      - name: Log in to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ACR_NAME }}.azurecr.io
+          username: crAppointments
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # 5. Билд и директно качване чрез .NET SDK
+      - name: Publish Container
+        working-directory: ./Appointments/Appointments.Api
+        run: |
+          dotnet publish -c Release /t:PublishContainer \
+            -p:ContainerRegistry=${{ env.ACR_NAME }}.azurecr.io \
+            -p:ContainerImageTag=latest \
+            -p:ContainerImageTag=${{ github.sha }}
+
+      # 6. ДЕПЛОЙ В AZURE CONTAINER APPS (Новата стъпка)
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          acrName: ${{ env.ACR_NAME }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/appointments.api:${{ github.sha }}
