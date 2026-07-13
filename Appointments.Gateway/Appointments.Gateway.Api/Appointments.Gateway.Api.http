@@ -1,0 +1,6 @@
+@Appointments.Gateway.Api_HostAddress = http://localhost:5239
+
+GET {{Appointments.Gateway.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
