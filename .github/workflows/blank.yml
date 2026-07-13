@@ -52,10 +52,10 @@ jobs:
             -p:ContainerImageTag=latest \
             -p:ContainerImageTag=${{ github.sha }}
       # 6. ДЕПЛОЙ В AZURE CONTAINER APPS (Новата стъпка)
-      - name: Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          acrName: ${{ env.ACR_NAME }}
-          containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/appointments.gateway.api:${{ github.sha }}
+      #- name: Deploy to Azure Container Apps
+      #  uses: azure/container-apps-deploy-action@v1
+      #  with:
+      #    acrName: ${{ env.ACR_NAME }}
+      #    containerAppName: ${{ env.CONTAINER_APP_NAME }}
+      #    resourceGroup: ${{ env.RESOURCE_GROUP }}
+      #    imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/appointments.gateway.api:${{ github.sha }}
