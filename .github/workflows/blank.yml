@@ -3,7 +3,7 @@ name: Build, Push and Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main
+      - master
 
 permissions:
   id-token: write
@@ -47,7 +47,7 @@ jobs:
 
       # 5. Билд и директно качване чрез .NET SDK
       - name: Publish Container
-        working-directory: ./Appointments/Appointments.Api
+        working-directory: ./Appointments.Gateway/Appointments.Gateway.Api
         run: |
           dotnet publish -c Release /t:PublishContainer \
             -p:ContainerRegistry=${{ env.ACR_NAME }}.azurecr.io \
@@ -61,4 +61,4 @@ jobs:
           acrName: ${{ env.ACR_NAME }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
-          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/appointments.api:${{ github.sha }}
+          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/appointments.gateway.api:${{ github.sha }}
